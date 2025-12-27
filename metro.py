@@ -107,7 +107,10 @@ def parse_html(html):
 
                     if "operacional" in status_text:
                         status = "operational"
-                    elif "serviço" in status_text or "servico" in status_text:
+                    elif (
+                        "fora de serviço" in status_text
+                        or "fora de servico" in status_text
+                    ):
                         status = "out_of_service"
                     else:
                         continue
