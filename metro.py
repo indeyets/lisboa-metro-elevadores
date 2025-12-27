@@ -5,6 +5,9 @@ Metro Lisboa Elevator Status CLI
 Usage:
     ./metro.py update          - Fetch and save elevator data
     ./metro.py show <station>  - Show elevators for a station
+
+Copyright (c) 2025 Aleksei Zakhlestin
+Licensed under the MIT License. See LICENSE file for details.
 """
 
 import argparse
