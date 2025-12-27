@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Metro Lisboa Elevator Status CLI
+Lisbon Metro Elevator Status CLI
 
 Usage:
     ./metro.py update          - Fetch and save elevator data
@@ -39,7 +39,7 @@ TD_PATTERN = re.compile(r"<td[^>]*>(.*?)</td>", re.DOTALL)
 
 
 def fetch_data():
-    """Fetch HTML from Metro Lisboa endpoint."""
+    """Fetch HTML from Lisbon Metro endpoint."""
     req = urllib.request.Request(
         ENDPOINT, headers={"User-Agent": "MetroElevadores/1.0"}
     )
@@ -125,7 +125,7 @@ def parse_html(html):
 
 def cmd_update():
     """Fetch data and save to JSON file."""
-    print("Fetching data from Metro Lisboa...")
+    print("Fetching data from Lisbon Metro...")
 
     try:
         html = fetch_data()
@@ -164,7 +164,7 @@ def cmd_update():
     # Validate parsed data
     if total == 0:
         print(
-            "Error: Failed to parse elevator data from Metro Lisboa website.",
+            "Error: Failed to parse elevator data from Lisbon Metro website.",
             file=sys.stderr,
         )
         print(
@@ -248,7 +248,7 @@ def cmd_show(station_query):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Metro Lisboa Elevator Status",
+        description="Lisbon Metro Elevator Status",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
 
