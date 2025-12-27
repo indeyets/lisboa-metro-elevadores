@@ -17,6 +17,7 @@ from pathlib import Path
 
 ENDPOINT = "https://www.metrolisboa.pt/wp-admin/admin-ajax.php?action=estado_linha_ajax_2022_nova_action"
 DATA_FILE = Path(__file__).parent / "elevadores.json"
+GITHUB_URL = "https://github.com/indeyets/lisboa-metro-elevadores"
 
 LINES = {
     "amarela": "Linha Amarela",
@@ -133,8 +134,22 @@ def cmd_update():
         return 1
 
     print("Parsing HTML...")
-    data = parse_html(html)
-    data["updated_at"] = datetime.now().isoformat()
+    try:
+        data = parse_html(html)
+    except Exception as e:
+        print(
+            f"Error: Failed to parse elevator data: {e}",
+            file=sys.stderr,
+        )
+        print(
+            "The website structure may have changed.",
+            file=sys.stderr,
+        )
+        print(
+            f"Please report this issue at: {GITHUB_URL}",
+            file=sys.stderr,
+        )
+        return 1
 
     # Count statistics
     total = 0
@@ -145,6 +160,24 @@ def cmd_update():
                 total += 1
                 if elev["status"] == "out_of_service":
                     out_of_service += 1
+
+    # Validate parsed data
+    if total == 0:
+        print(
+            "Error: Failed to parse elevator data from Metro Lisboa website.",
+            file=sys.stderr,
+        )
+        print(
+            "The website structure may have changed.",
+            file=sys.stderr,
+        )
+        print(
+            f"Please report this issue at: {GITHUB_URL}",
+            file=sys.stderr,
+        )
+        return 1
+
+    data["updated_at"] = datetime.now().isoformat()
 
     with open(DATA_FILE, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
