@@ -200,8 +200,13 @@ def cmd_show(station_query):
         print("No data file. Run 'update' first.", file=sys.stderr)
         return 1
 
-    with open(DATA_FILE, "r", encoding="utf-8") as f:
-        data = json.load(f)
+    try:
+        with open(DATA_FILE, "r", encoding="utf-8") as f:
+            data = json.load(f)
+    except json.JSONDecodeError as e:
+        print(f"Error: Data file is corrupted: {e}", file=sys.stderr)
+        print("Try running 'update' to refresh the data.", file=sys.stderr)
+        return 1
 
     query = station_query.lower()
 
