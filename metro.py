@@ -9,8 +9,10 @@ Usage:
 
 import argparse
 import json
+import os
 import re
 import sys
+import tempfile
 import urllib.request
 from datetime import datetime
 from pathlib import Path
@@ -186,8 +188,17 @@ def cmd_update():
 
     data["updated_at"] = datetime.now().isoformat()
 
-    with open(DATA_FILE, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
+    # Write atomically to prevent corruption on interrupt
+    temp_fd, temp_path = tempfile.mkstemp(
+        dir=DATA_FILE.parent, suffix=".json", prefix=".elevadores_"
+    )
+    try:
+        with os.fdopen(temp_fd, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+        os.replace(temp_path, DATA_FILE)
+    except Exception:
+        os.unlink(temp_path)
+        raise
 
     print(f"Saved to {DATA_FILE}")
     print(f"Total elevators: {total}, out of service: {out_of_service}")
