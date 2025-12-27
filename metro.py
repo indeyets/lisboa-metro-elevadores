@@ -20,15 +20,17 @@ import urllib.request
 from datetime import datetime
 from pathlib import Path
 
-ENDPOINT = "https://www.metrolisboa.pt/wp-admin/admin-ajax.php?action=estado_linha_ajax_2022_nova_action"
-DATA_FILE = Path(__file__).parent / "elevadores.json"
+# Portuguese version: https://www.metrolisboa.pt/wp-admin/admin-ajax.php?action=estado_linha_ajax_2022_nova_action
+ENDPOINT = "https://www.metrolisboa.pt/en/wp-admin/admin-ajax.php?action=estado_linha_ajax_2022_nova_action_en"
+DATA_FILE = Path(__file__).parent / "elevators.json"
 GITHUB_URL = "https://github.com/indeyets/lisboa-metro-elevadores"
 
+# Line IDs (Portuguese) mapped to display names (English)
 LINES = {
-    "amarela": "Linha Amarela",
-    "azul": "Linha Azul",
-    "verde": "Linha Verde",
-    "vermelha": "Linha Vermelha",
+    "amarela": "Yellow Line",
+    "azul": "Blue Line",
+    "verde": "Green Line",
+    "vermelha": "Red Line",
 }
 
 # Regex patterns for parsing
@@ -98,12 +100,9 @@ def parse_html(html):
                     location = clean_html(cells[2])
                     status_text = clean_html(cells[3]).lower()
 
-                    if "operacional" in status_text:
+                    if status_text == "operational":
                         status = "operational"
-                    elif (
-                        "fora de serviço" in status_text
-                        or "fora de servico" in status_text
-                    ):
+                    elif status_text == "out of service":
                         status = "out_of_service"
                     else:
                         print(
@@ -181,7 +180,7 @@ def cmd_update():
 
     # Write atomically to prevent corruption on interrupt
     temp_fd, temp_path = tempfile.mkstemp(
-        dir=DATA_FILE.parent, suffix=".json", prefix=".elevadores_"
+        dir=DATA_FILE.parent, suffix=".json", prefix=".elevators_"
     )
     try:
         with os.fdopen(temp_fd, "w", encoding="utf-8") as f:
