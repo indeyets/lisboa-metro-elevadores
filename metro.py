@@ -29,18 +29,6 @@ LINES = {
 }
 
 # Regex patterns for parsing
-LINE_PATTERN = re.compile(
-    r'<div id="estadolinha(\w+)"[^>]*class="modal"[^>]*>(.*?)</div>\s*</div>\s*</div>\s*<div id="estadolinha',
-    re.DOTALL,
-)
-LINE_PATTERN_LAST = re.compile(
-    r'<div id="estadolinha(\w+)"[^>]*class="modal"[^>]*>(.*?)$', re.DOTALL
-)
-STATION_PATTERN = re.compile(
-    r'<div class="accordionElev__title">(.*?)</div>\s*</div>\s*<div class="accordionElev__content-wrap">',
-    re.DOTALL,
-)
-STATION_NAME_PATTERN = re.compile(r"<div[^>]*>([^<]+)</div>")
 TABLE_ROW_PATTERN = re.compile(
     r"<tr[^>]*style='background-color:white'[^>]*>(.*?)</tr>", re.DOTALL
 )
