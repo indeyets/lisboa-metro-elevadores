@@ -113,6 +113,10 @@ def parse_html(html):
                     ):
                         status = "out_of_service"
                     else:
+                        print(
+                            f"Warning: Unknown status '{status_text}' at {station_name}",
+                            file=sys.stderr,
+                        )
                         continue
 
                     elevators.append({"location": location, "status": status})
