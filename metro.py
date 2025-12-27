@@ -12,6 +12,7 @@ Licensed under the MIT License. See LICENSE file for details.
 
 import argparse
 import json
+import locale
 import os
 import re
 import sys
@@ -240,7 +241,13 @@ def cmd_show(station_query):
 
     # Show last update time
     if "updated_at" in data:
-        print(f"\nLast updated: {data['updated_at']}")
+        try:
+            locale.setlocale(locale.LC_TIME, "")
+            dt = datetime.fromisoformat(data["updated_at"])
+            formatted = dt.strftime("%c")
+        except (ValueError, locale.Error):
+            formatted = data["updated_at"]
+        print(f"\nLast updated: {formatted}")
 
     return 0
 
